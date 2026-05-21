@@ -1,0 +1,1268 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Rhythia Skill Tracker</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --bg: #0d0d0f;
+                --bg2: #141416;
+                --bg3: #1c1c20;
+                --border: rgba(255, 255, 255, 0.07);
+                --border2: rgba(255, 255, 255, 0.14);
+                --text: #e8e8ea;
+                --muted: #666672;
+                --muted2: #444450;
+
+                /* <94% = red */
+                --c-sub94-bg: #230a0f;
+                --c-sub94-border: #b83a4a;
+                --c-sub94-text: #ff5d6d;
+                --c-sub94-badge: #4a121b;
+
+                /* 94% = green */
+                --c-94-bg: #0e1e10;
+                --c-94-border: #1a7a3c;
+                --c-94-text: #3ec86a;
+                --c-94-badge: #0a2e14;
+
+                /* S rank = yellow/amber */
+                --c-s-bg: #1e1a08;
+                --c-s-border: #8a6e10;
+                --c-s-text: #f0c030;
+                --c-s-badge: #3a2e08;
+
+                /* Clear = purple */
+                --c-clear-bg: #16102a;
+                --c-clear-border: #5a3db0;
+                --c-clear-text: #a87ef0;
+                --c-clear-badge: #2a1a50;
+
+                --radius: 6px;
+                --font-mono: "Space Mono", monospace;
+                --font-ui: "DM Sans", sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--font-ui);
+                min-height: 100vh;
+            }
+
+            /* NAV */
+            nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 2rem;
+                height: 52px;
+                border-bottom: 0.5px solid var(--border);
+                background: var(--bg2);
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                gap: 1rem;
+            }
+
+            .nav-left {
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
+            }
+            .nav-eyebrow {
+                font-family: var(--font-mono);
+                font-size: 9px;
+                color: var(--muted);
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+            }
+            .nav-title {
+                font-family: var(--font-mono);
+                font-size: 17px;
+                font-weight: 700;
+                color: var(--text);
+                letter-spacing: -0.02em;
+                line-height: 1;
+            }
+            .nav-title span {
+                color: var(--c-94-text);
+            }
+
+            .nav-right {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+
+            .stat-pill {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                background: var(--bg3);
+                border: 0.5px solid var(--border2);
+                border-radius: 99px;
+                padding: 4px 10px 4px 7px;
+                font-size: 11px;
+                color: var(--muted);
+                font-family: var(--font-mono);
+                white-space: nowrap;
+            }
+            .stat-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+            .stat-pill b {
+                color: var(--text);
+                font-weight: 700;
+            }
+
+            /* PROGRESS */
+            .progress-wrap {
+                height: 2px;
+                background: var(--bg3);
+            }
+            .progress-bar {
+                height: 100%;
+                background: linear-gradient(90deg, var(--c-94-text), var(--c-s-text), var(--c-clear-text));
+                transition: width 0.4s ease;
+            }
+
+            /* ROAD TO DELTA banner */
+            .road-banner {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                padding: 2.5rem 0 2rem;
+            }
+            .road-text {
+                font-family: var(--font-mono);
+                font-size: 32px;
+                font-weight: 700;
+                color: var(--muted);
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+            }
+            .road-text span {
+                color: var(--c-clear-text);
+            }
+
+            /* MAIN */
+            .page {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 1.75rem 1.5rem 5rem;
+            }
+
+            /* LOAD JSON */
+            .load-bar {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 1.25rem;
+                flex-wrap: wrap;
+            }
+            .load-bar label.lbl {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--muted);
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+            }
+            .file-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                padding: 6px 14px;
+                background: var(--bg3);
+                border: 0.5px solid var(--border2);
+                border-radius: var(--radius);
+                color: var(--text);
+                font-family: var(--font-mono);
+                font-size: 11px;
+                cursor: pointer;
+                transition: border-color 0.15s;
+            }
+            .file-btn:hover {
+                border-color: rgba(255, 255, 255, 0.3);
+            }
+            #file-input {
+                display: none;
+            }
+            .load-sep {
+                width: 1px;
+                height: 18px;
+                background: var(--border2);
+                margin: 0 4px;
+            }
+            .load-status {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--c-94-text);
+            }
+            .load-status.err {
+                color: #e24b4a;
+            }
+
+            /* LEGEND */
+            .legend {
+                display: flex;
+                gap: 6px;
+                margin-bottom: 1.25rem;
+                flex-wrap: wrap;
+            }
+            .leg {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                background: var(--bg2);
+                border: 0.5px solid var(--border);
+                border-radius: 4px;
+                padding: 5px 10px;
+                font-size: 11px;
+                color: var(--muted);
+                font-family: var(--font-mono);
+            }
+            .leg-sq {
+                width: 10px;
+                height: 10px;
+                border-radius: 2px;
+            }
+            .leg-none-sq {
+                background: var(--bg3);
+                border: 0.5px solid var(--border2);
+            }
+            .leg-sub94-sq {
+                background: var(--c-sub94-bg);
+                border: 0.5px solid var(--c-sub94-border);
+            }
+            .leg-94-sq {
+                background: var(--c-94-bg);
+                border: 0.5px solid var(--c-94-border);
+            }
+            .leg-s-sq {
+                background: var(--c-s-bg);
+                border: 0.5px solid var(--c-s-border);
+            }
+            .leg-clear-sq {
+                background: var(--c-clear-bg);
+                border: 0.5px solid var(--c-clear-border);
+            }
+
+            /* GRID */
+            .grid-wrap {
+                overflow-x: auto;
+                padding-bottom: 1rem;
+            }
+
+            .cat-headers {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 4px;
+                margin-bottom: 5px;
+                min-width: 700px;
+            }
+            .cat-h {
+                font-size: 13px;
+                color: var(--text);
+                text-align: center;
+                padding: 5px 2px 10px;
+                font-family: var(--font-mono);
+                font-weight: 700;
+                letter-spacing: 0.03em;
+                text-transform: uppercase;
+                border-bottom: 1px solid var(--border2);
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 4px;
+                min-width: 700px;
+            }
+
+            .cell {
+                aspect-ratio: 1;
+                border-radius: var(--radius);
+                border: 0.5px solid rgba(255, 255, 255, 0.05);
+                background: #1a1a1e;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+                padding: 6px 5px 18px;
+                gap: 4px;
+                transition:
+                    transform 0.1s,
+                    border-color 0.1s;
+            }
+            .cell:hover {
+                transform: scale(1.05);
+                z-index: 5;
+                border-color: var(--border2);
+            }
+
+            .cell.is-sub94 {
+                background: var(--c-sub94-bg);
+                border-color: var(--c-sub94-border);
+            }
+            .cell.is-94 {
+                background: var(--c-94-bg);
+                border-color: var(--c-94-border);
+            }
+            .cell.is-s {
+                background: var(--c-s-bg);
+                border-color: var(--c-s-border);
+            }
+            .cell.is-clear {
+                background: var(--c-clear-bg);
+                border-color: var(--c-clear-border);
+            }
+
+            .cell-num {
+                font-family: var(--font-mono);
+                font-size: 24px;
+                font-weight: 700;
+                color: var(--muted);
+                line-height: 1;
+            }
+            .cell.is-sub94 .cell-num {
+                color: var(--c-sub94-text);
+            }
+            .cell.is-94 .cell-num {
+                color: var(--c-94-text);
+            }
+            .cell.is-s .cell-num {
+                color: var(--c-s-text);
+            }
+            .cell.is-clear .cell-num {
+                color: var(--c-clear-text);
+            }
+
+            .cell-info {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+                width: 100%;
+                overflow: hidden;
+            }
+            .cell-name {
+                font-size: 12px;
+                font-weight: 600;
+                text-align: center;
+                color: var(--muted);
+                line-height: 1.2;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 92%;
+            }
+            .cell-artist {
+                font-size: 10px;
+                text-align: center;
+                color: var(--muted2);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 92%;
+            }
+            .cell.is-sub94 .cell-name,
+            .cell.is-sub94 .cell-artist {
+                color: var(--c-sub94-text);
+                opacity: 0.85;
+            }
+            .cell.is-94 .cell-name,
+            .cell.is-94 .cell-artist {
+                color: var(--c-94-text);
+                opacity: 0.85;
+            }
+            .cell.is-s .cell-name,
+            .cell.is-s .cell-artist {
+                color: var(--c-s-text);
+                opacity: 0.85;
+            }
+            .cell.is-clear .cell-name,
+            .cell.is-clear .cell-artist {
+                color: var(--c-clear-text);
+                opacity: 0.85;
+            }
+
+            .cell-rate {
+                position: absolute;
+                bottom: 3px;
+                left: 5px;
+                font-family: var(--font-mono);
+                font-size: 8px;
+                color: var(--muted2);
+            }
+            .cell.is-sub94 .cell-rate {
+                color: var(--c-sub94-text);
+                opacity: 0.5;
+            }
+            .cell.is-94 .cell-rate {
+                color: var(--c-94-text);
+                opacity: 0.5;
+            }
+            .cell.is-s .cell-rate {
+                color: var(--c-s-text);
+                opacity: 0.5;
+            }
+            .cell.is-clear .cell-rate {
+                color: var(--c-clear-text);
+                opacity: 0.5;
+            }
+
+            .cell-badge {
+                position: absolute;
+                bottom: 3px;
+                right: 4px;
+                font-family: var(--font-mono);
+                font-size: 8px;
+                font-weight: 700;
+                letter-spacing: 0.03em;
+                padding: 1px 4px;
+                border-radius: 2px;
+                line-height: 1.5;
+            }
+            .cell.is-sub94 .cell-badge {
+                background: var(--c-sub94-badge);
+                color: var(--c-sub94-text);
+            }
+            .cell.is-94 .cell-badge {
+                background: var(--c-94-badge);
+                color: var(--c-94-text);
+            }
+            .cell.is-s .cell-badge {
+                background: var(--c-s-badge);
+                color: var(--c-s-text);
+            }
+            .cell.is-clear .cell-badge {
+                background: var(--c-clear-badge);
+                color: var(--c-clear-text);
+            }
+
+            /* FINAL BOSS */
+            .final-boss-wrap {
+                margin-top: 3rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .final-boss-label {
+                font-family: var(--font-mono);
+                font-size: 10px;
+                color: var(--muted2);
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+            }
+
+            .final-boss {
+                width: 100%;
+                max-width: 1200px;
+                min-height: 110px;
+                border-radius: 10px;
+                background: #0f0f13;
+                border: 1px solid var(--border2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                gap: 6px;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+                padding: 1.5rem;
+                transition:
+                    border-color 0.15s,
+                    transform 0.1s;
+            }
+
+            .final-boss::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+                pointer-events: none;
+            }
+
+            .final-boss:hover {
+                border-color: rgba(255, 255, 255, 0.25);
+                transform: scale(1.005);
+            }
+
+            .fb-delta {
+                font-family: serif;
+                font-size: 36px;
+                color: var(--muted);
+                line-height: 1;
+            }
+
+            .fb-name {
+                font-family: var(--font-mono);
+                font-size: 20px;
+                font-weight: 700;
+                color: var(--text);
+                letter-spacing: 0.02em;
+            }
+
+            .fb-meta {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--muted2);
+                letter-spacing: 0.06em;
+            }
+
+            .fb-badge {
+                position: absolute;
+                bottom: 8px;
+                right: 12px;
+                font-family: var(--font-mono);
+                font-size: 9px;
+                font-weight: 700;
+                padding: 2px 6px;
+                border-radius: 3px;
+                background: var(--bg3);
+                color: var(--muted);
+            }
+
+            /* MODAL */
+            .overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.75);
+                z-index: 200;
+                align-items: center;
+                justify-content: center;
+            }
+            .overlay.open {
+                display: flex;
+            }
+
+            .modal {
+                background: var(--bg2);
+                border: 0.5px solid var(--border2);
+                border-radius: 10px;
+                padding: 1.5rem;
+                width: 340px;
+                max-width: calc(100vw - 2rem);
+            }
+
+            .modal-header {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                margin-bottom: 1.25rem;
+            }
+            .modal-header h3 {
+                font-family: var(--font-mono);
+                font-size: 15px;
+                font-weight: 700;
+                color: var(--text);
+                line-height: 1.3;
+            }
+            .modal-header p {
+                font-size: 11px;
+                color: var(--muted);
+                margin-top: 3px;
+                font-family: var(--font-mono);
+            }
+            .close-x {
+                background: none;
+                border: none;
+                color: var(--muted);
+                font-size: 22px;
+                cursor: pointer;
+                line-height: 1;
+                padding: 0;
+                margin-left: 1rem;
+                flex-shrink: 0;
+            }
+            .close-x:hover {
+                color: var(--text);
+            }
+
+            .field-label {
+                font-size: 10px;
+                color: var(--muted);
+                font-family: var(--font-mono);
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+                margin-top: 14px;
+            }
+
+            .map-info-box {
+                background: var(--bg3);
+                border: 0.5px solid var(--border);
+                border-radius: var(--radius);
+                padding: 10px 12px;
+            }
+            .mi-name {
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text);
+            }
+            .mi-sub {
+                display: flex;
+                gap: 12px;
+                margin-top: 4px;
+            }
+            .mi-artist {
+                font-size: 11px;
+                color: var(--muted);
+            }
+            .mi-rate {
+                font-size: 11px;
+                color: var(--muted);
+                font-family: var(--font-mono);
+            }
+            .mi-rate span {
+                color: var(--c-s-text);
+            }
+            .map-info-empty {
+                font-size: 12px;
+                color: var(--muted2);
+                font-family: var(--font-mono);
+                font-style: italic;
+            }
+
+            .rank-grid {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 5px;
+                margin-top: 5px;
+            }
+
+            .rk-btn {
+                padding: 9px 4px;
+                border-radius: var(--radius);
+                border: 0.5px solid var(--border2);
+                background: var(--bg3);
+                color: var(--muted);
+                font-family: var(--font-mono);
+                font-size: 11px;
+                font-weight: 700;
+                cursor: pointer;
+                text-align: center;
+                transition: all 0.12s;
+                letter-spacing: 0.02em;
+            }
+            .rk-btn:hover {
+                border-color: rgba(255, 255, 255, 0.25);
+                color: var(--text);
+            }
+            .rk-btn.sel-none {
+                background: var(--bg3);
+                border-color: rgba(255, 255, 255, 0.3);
+                color: var(--text);
+            }
+            .rk-btn.sel-sub94 {
+                background: var(--c-sub94-bg);
+                border-color: var(--c-sub94-border);
+                color: var(--c-sub94-text);
+            }
+            .rk-btn.sel-94 {
+                background: var(--c-94-bg);
+                border-color: var(--c-94-border);
+                color: var(--c-94-text);
+            }
+            .rk-btn.sel-s {
+                background: var(--c-s-bg);
+                border-color: var(--c-s-border);
+                color: var(--c-s-text);
+            }
+            .rk-btn.sel-clear {
+                background: var(--c-clear-bg);
+                border-color: var(--c-clear-border);
+                color: var(--c-clear-text);
+            }
+
+            .modal-footer {
+                display: flex;
+                gap: 6px;
+                margin-top: 1.25rem;
+            }
+            .btn-save {
+                flex: 1;
+                padding: 9px;
+                background: var(--text);
+                color: var(--bg);
+                border: none;
+                border-radius: var(--radius);
+                font-family: var(--font-mono);
+                font-size: 12px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: opacity 0.1s;
+            }
+            .btn-save:hover {
+                opacity: 0.85;
+            }
+            .btn-cancel {
+                padding: 9px 14px;
+                background: transparent;
+                color: var(--muted);
+                border: 0.5px solid var(--border2);
+                border-radius: var(--radius);
+                font-family: var(--font-mono);
+                font-size: 12px;
+                cursor: pointer;
+            }
+            .btn-cancel:hover {
+                color: var(--text);
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <div class="nav-left">
+                <div class="nav-eyebrow">osu! mania</div>
+                <div class="nav-title">skill <span>tracker</span></div>
+            </div>
+            <div class="nav-right" id="stats-row"></div>
+        </nav>
+
+        <div class="progress-wrap">
+            <div class="progress-bar" id="prog-bar" style="width: 0%"></div>
+        </div>
+
+        <div class="page">
+            <div class="road-banner">
+                <span class="road-text">road to <span>DELTA</span></span>
+            </div>
+
+            <div class="load-bar">
+                <label class="lbl">maps</label>
+                <label class="file-btn" for="file-input">&#8599; wczytaj maps.json</label>
+                <input type="file" id="file-input" accept=".json" style="display: none" />
+                <span class="load-status" id="load-status"></span>
+                <div class="load-sep"></div>
+                <label class="lbl">progres</label>
+                <button class="file-btn" onclick="exportProgress()">&#8595; eksportuj progres</button>
+                <label class="file-btn" for="import-input">&#8593; importuj progres</label>
+                <input type="file" id="import-input" accept=".json" style="display: none" />
+                <span class="load-status" id="import-status"></span>
+            </div>
+
+            <div class="legend">
+                <div class="leg">
+                    <div class="leg-sq leg-none-sq"></div>
+                    brak
+                </div>
+                <div class="leg">
+                    <div class="leg-sq leg-sub94-sq"></div>
+                    <94%
+                </div>
+                <div class="leg">
+                    <div class="leg-sq leg-94-sq"></div>
+                    94%
+                </div>
+                <div class="leg">
+                    <div class="leg-sq leg-s-sq"></div>
+                    S rank
+                </div>
+                <div class="leg">
+                    <div class="leg-sq leg-clear-sq"></div>
+                    Clear
+                </div>
+            </div>
+
+            <div class="grid-wrap">
+                <div class="cat-headers" id="cat-headers"></div>
+                <div class="grid" id="grid"></div>
+            </div>
+
+            <div class="final-boss-wrap">
+                <div class="final-boss-label">&#9670; final boss</div>
+                <div class="final-boss" id="final-boss-cell" onclick="openFinalBoss()">
+                    <div class="fb-delta">Δ</div>
+                    <div class="fb-name">Delta Dan</div>
+                    <div class="fb-meta">DDMythical &nbsp;·&nbsp; rate 1.0</div>
+                    <div class="fb-badge" id="fb-badge-el" style="display: none"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay" id="overlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <div>
+                        <h3 id="m-title">Mapa #1</h3>
+                        <p id="m-sub">speed jack</p>
+                    </div>
+                    <button class="close-x" onclick="closeModal()">×</button>
+                </div>
+                <div class="field-label">mapa</div>
+                <div id="m-mapinfo"></div>
+                <div class="field-label">status</div>
+                <div class="rank-grid">
+                    <button class="rk-btn" id="rk-none" onclick="pickRank('none')">brak</button>
+                    <button class="rk-btn" id="rk-sub94" onclick="pickRank('sub94')">&lt;94%</button>
+                    <button class="rk-btn" id="rk-94" onclick="pickRank('94')">94%</button>
+                    <button class="rk-btn" id="rk-s" onclick="pickRank('s')">S rank</button>
+                    <button class="rk-btn" id="rk-clear" onclick="pickRank('clear')">Clear</button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-save" onclick="saveModal()">zapisz</button>
+                    <button class="btn-cancel" onclick="closeModal()">anuluj</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const CATS = [
+                { name: "jumpstream", short: "Jumpstream" },
+                { name: "handstream", short: "Handstream" },
+                { name: "speed", short: "Speed" },
+                { name: "chord jack", short: "Chordjack" },
+                { name: "dense chord jack", short: "Dense Chordjack" },
+                { name: "speed jack", short: "Speedjack" },
+                { name: "tech", short: "Tech" },
+            ];
+
+            const ROWS = 8;
+            const TOTAL = CATS.length * ROWS;
+            const STORAGE_KEY = "rhythia_v4";
+
+            const STATUS_ORDER = ["sub94", "94", "s", "clear"];
+            const STATUS_META = {
+                sub94: {
+                    label: "<94%",
+                    badge: "<94%",
+                    text: "var(--c-sub94-text)",
+                    bg: "var(--c-sub94-bg)",
+                    border: "var(--c-sub94-border)",
+                    badgeBg: "var(--c-sub94-badge)",
+                },
+                94: {
+                    label: "94%",
+                    badge: "94%",
+                    text: "var(--c-94-text)",
+                    bg: "var(--c-94-bg)",
+                    border: "var(--c-94-border)",
+                    badgeBg: "var(--c-94-badge)",
+                },
+                s: {
+                    label: "S rank",
+                    badge: "S",
+                    text: "var(--c-s-text)",
+                    bg: "var(--c-s-bg)",
+                    border: "var(--c-s-border)",
+                    badgeBg: "var(--c-s-badge)",
+                },
+                clear: {
+                    label: "Clear",
+                    badge: "CLR",
+                    text: "var(--c-clear-text)",
+                    bg: "var(--c-clear-bg)",
+                    border: "var(--c-clear-border)",
+                    badgeBg: "var(--c-clear-badge)",
+                },
+            };
+
+            // POPRAWKA: Próbujemy wczytać mapData z localStorage na starcie
+            let mapData = {};
+            try {
+                mapData = JSON.parse(localStorage.getItem("rhythia_maps") || "{}");
+            } catch (e) {
+                mapData = {};
+            }
+            let progress = normalizeProgressData(readLocalProgress());
+
+            function readLocalProgress() {
+                try {
+                    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+                } catch (e) {
+                    return {};
+                }
+            }
+
+            function key(catName, row) {
+                return catName + "|" + row;
+            }
+
+            function normalizeStatus(value) {
+                if (value == null) return "none";
+                const v = String(value).trim().toLowerCase();
+                if (v === "none" || v === "") return "none";
+                if (v === "sub94" || v === "<94%" || v === "<94" || v === "under94" || v === "below94")
+                    return "sub94";
+                if (v === "94" || v === "94%" || v === "94 percent" || v === "94percent") return "94";
+                if (v === "s" || v === "s rank" || v === "srank") return "s";
+                if (v === "clear" || v === "clr") return "clear";
+                return "none";
+            }
+
+            function normalizeProgressData(input) {
+                if (!input || typeof input !== "object" || Array.isArray(input)) return {};
+                const out = {};
+                for (const [k, v] of Object.entries(input)) {
+                    if (!v || typeof v !== "object" || Array.isArray(v)) continue;
+                    const status = normalizeStatus(v.status);
+                    if (status !== "none") {
+                        out[k] = { status };
+                    }
+                }
+                return out;
+            }
+
+            function saveProgress() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+                } catch (e) {}
+            }
+
+            function setStatusLine(id, text, isErr = false) {
+                const el = document.getElementById(id);
+                el.className = "load-status" + (isErr ? " err" : "");
+                el.textContent = text;
+            }
+
+            function exportProgress() {
+                const data = JSON.stringify(progress, null, 2);
+                const blob = new Blob([data], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "progress.json";
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            document.getElementById("import-input").addEventListener("change", function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    try {
+                        const imported = JSON.parse(ev.target.result);
+                        if (typeof imported !== "object" || Array.isArray(imported))
+                            throw new Error("bad format");
+                        progress = normalizeProgressData(imported);
+                        saveProgress();
+                        render();
+                        setStatusLine("import-status", "✓ wczytano progres");
+                    } catch (err) {
+                        setStatusLine("import-status", "✗ błąd importu", true);
+                    }
+                };
+                reader.readAsText(file);
+                e.target.value = "";
+            });
+
+            document.getElementById("file-input").addEventListener("change", function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    try {
+                        mapData = JSON.parse(ev.target.result);
+                        // POPRAWKA: Zapisujemy mapData do localStorage pod kluczem "rhythia_maps"
+                        localStorage.setItem("rhythia_maps", ev.target.result);
+                        setStatusLine("load-status", "✓ wczytano " + file.name);
+                        render();
+                    } catch (err) {
+                        setStatusLine("load-status", "✗ błąd parsowania JSON", true);
+                    }
+                };
+                reader.readAsText(file);
+                e.target.value = "";
+            });
+
+            function getEntry(catName, row) {
+                const cat = mapData[catName];
+                return cat && cat[row] ? cat[row] : null;
+            }
+
+            function render() {
+                const catH = document.getElementById("cat-headers");
+                const grid = document.getElementById("grid");
+                catH.innerHTML = "";
+                grid.innerHTML = "";
+
+                CATS.forEach((c) => {
+                    const d = document.createElement("div");
+                    d.className = "cat-h";
+                    d.textContent = c.short;
+                    catH.appendChild(d);
+                });
+
+                for (let row = 0; row < ROWS; row++) {
+                    CATS.forEach((cat, ci) => {
+                        const idx = ci * ROWS + row + 1;
+                        const k = key(cat.name, row);
+                        const p = progress[k] || {};
+                        const status = normalizeStatus(p.status);
+                        const entry = getEntry(cat.name, row);
+
+                        const cell = document.createElement("div");
+                        cell.className = "cell" + (status !== "none" ? " is-" + status : "");
+
+                        const numEl = document.createElement("div");
+                        numEl.className = "cell-num";
+                        numEl.textContent = idx;
+                        cell.appendChild(numEl);
+
+                        if (entry && entry.name) {
+                            const info = document.createElement("div");
+                            info.className = "cell-info";
+                            const nm = document.createElement("div");
+                            nm.className = "cell-name";
+                            nm.textContent = entry.name;
+                            info.appendChild(nm);
+                            if (entry.artist) {
+                                const ar = document.createElement("div");
+                                ar.className = "cell-artist";
+                                ar.textContent = entry.artist;
+                                info.appendChild(ar);
+                            }
+                            cell.appendChild(info);
+                        }
+
+                        if (entry && entry.rate != null) {
+                            const rt = document.createElement("div");
+                            rt.className = "cell-rate";
+                            rt.textContent = entry.rate + "x";
+                            cell.appendChild(rt);
+                        }
+
+                        if (status !== "none") {
+                            const badge = document.createElement("div");
+                            badge.className = "cell-badge";
+                            badge.textContent = STATUS_META[status] ? STATUS_META[status].badge : status;
+                            cell.appendChild(badge);
+                        }
+
+                        cell.onclick = () => openModal(cat, row, idx);
+                        grid.appendChild(cell);
+                    });
+                }
+
+                updateStats();
+                renderFinalBoss();
+            }
+
+            function updateStats() {
+                const counts = {
+                    sub94: 0,
+                    94: 0,
+                    s: 0,
+                    clear: 0,
+                };
+
+                Object.values(progress).forEach((d) => {
+                    const status = normalizeStatus(d && d.status);
+                    if (status in counts) counts[status]++;
+                });
+
+                // ZMIANA: Do sumy 'total' dodajemy tylko te statusy, które są realnym progressem (bez sub94)
+                const totalProgress = counts["94"] + counts.s + counts.clear;
+
+                const row = document.getElementById("stats-row");
+                row.innerHTML = "";
+
+                [
+                    { key: "sub94", label: "<94%", count: counts.sub94, color: "var(--c-sub94-text)" },
+                    { key: "94", label: "94%", count: counts["94"], color: "var(--c-94-text)" },
+                    { key: "s", label: "S rank", count: counts.s, color: "var(--c-s-text)" },
+                    { key: "clear", label: "Clear", count: counts.clear, color: "var(--c-clear-text)" },
+                    // ZMIANA: Tutaj też przekazujemy odfiltrowaną sumę progressu zamiast zmiennej total
+                    {
+                        key: "total",
+                        label: "total",
+                        count: totalProgress + "/" + TOTAL,
+                        color: "var(--muted)",
+                    },
+                ].forEach((p) => {
+                    const pill = document.createElement("div");
+                    pill.className = "stat-pill";
+                    pill.innerHTML = `<div class="stat-dot" style="background:${p.color}"></div>${p.label}: <b>${p.count}</b>`;
+                    row.appendChild(pill);
+                });
+
+                // ZMIANA: Pasek progresu również reaguje teraz tylko na właściwy progres
+                document.getElementById("prog-bar").style.width =
+                    Math.round((totalProgress / TOTAL) * 100) + "%";
+            }
+
+            function renderFinalBoss() {
+                const fbStatus = normalizeStatus((progress["__final_boss__"] || {}).status);
+                const cell = document.getElementById("final-boss-cell");
+                const badge = document.getElementById("fb-badge-el");
+                const delta = cell.querySelector(".fb-delta");
+                const name = cell.querySelector(".fb-name");
+                const meta = cell.querySelector(".fb-meta");
+
+                cell.style.borderColor = "";
+                cell.style.background = "";
+                delta.style.color = "";
+                name.style.color = "";
+                meta.style.color = "";
+
+                if (fbStatus === "sub94") {
+                    cell.style.borderColor = "var(--c-sub94-border)";
+                    cell.style.background = "var(--c-sub94-bg)";
+                    delta.style.color = "var(--c-sub94-text)";
+                    name.style.color = "var(--c-sub94-text)";
+                    meta.style.color = "var(--c-sub94-border)";
+                    badge.style.display = "block";
+                    badge.style.background = "var(--c-sub94-badge)";
+                    badge.style.color = "var(--c-sub94-text)";
+                    badge.textContent = "<94%";
+                } else if (fbStatus === "94") {
+                    cell.style.borderColor = "var(--c-94-border)";
+                    cell.style.background = "#0a1a0c";
+                    delta.style.color = "var(--c-94-text)";
+                    name.style.color = "var(--c-94-text)";
+                    meta.style.color = "var(--c-94-border)";
+                    badge.style.display = "block";
+                    badge.style.background = "var(--c-94-badge)";
+                    badge.style.color = "var(--c-94-text)";
+                    badge.textContent = "94%";
+                } else if (fbStatus === "s") {
+                    cell.style.borderColor = "var(--c-s-border)";
+                    cell.style.background = "#1a1804";
+                    delta.style.color = "var(--c-s-text)";
+                    name.style.color = "var(--c-s-text)";
+                    meta.style.color = "var(--c-s-border)";
+                    badge.style.display = "block";
+                    badge.style.background = "var(--c-s-badge)";
+                    badge.style.color = "var(--c-s-text)";
+                    badge.textContent = "S";
+                } else if (fbStatus === "clear") {
+                    cell.style.borderColor = "#8050e0";
+                    cell.style.background = "#140c28";
+                    delta.style.color = "var(--c-clear-text)";
+                    name.style.color = "var(--c-clear-text)";
+                    meta.style.color = "#5a3db0";
+                    badge.style.display = "block";
+                    badge.style.background = "var(--c-clear-badge)";
+                    badge.style.color = "var(--c-clear-text)";
+                    badge.textContent = "CLR";
+                } else {
+                    cell.style.borderColor = "#22335f";
+                    cell.style.background = "#0b1329";
+                    delta.style.color = "#7e9ddf";
+                    name.style.color = "#7e9ddf";
+                    meta.style.color = "#49618f";
+                    badge.style.display = "none";
+                }
+            }
+
+            /* MODAL */
+            let current = null;
+            let currentRank = "none";
+            let isFinalBoss = false;
+
+            function openModal(cat, row, idx) {
+                isFinalBoss = false;
+                current = { cat, row };
+                const p = progress[key(cat.name, row)] || {};
+                const entry = getEntry(cat.name, row);
+
+                document.getElementById("m-title").textContent = "Mapa #" + idx;
+                document.getElementById("m-sub").textContent = cat.name;
+
+                const infoBox = document.getElementById("m-mapinfo");
+                if (entry && entry.name) {
+                    const rateHtml =
+                        entry.rate != null
+                            ? `<div class="mi-rate">rate: <span>${entry.rate}x</span></div>`
+                            : "";
+                    infoBox.innerHTML = `<div class="map-info-box"><div class="mi-name">${entry.name}</div><div class="mi-sub"><div class="mi-artist">${entry.artist || ""}</div>${rateHtml}</div></div>`;
+                } else {
+                    infoBox.innerHTML = `<div class="map-info-empty">brak danych — wczytaj maps.json</div>`;
+                }
+
+                currentRank = normalizeStatus(p.status);
+                updateRankBtns();
+                document.getElementById("overlay").classList.add("open");
+            }
+
+            function openFinalBoss() {
+                isFinalBoss = true;
+                current = null;
+                const p = progress["__final_boss__"] || {};
+
+                document.getElementById("m-title").textContent = "Delta Dan";
+                document.getElementById("m-sub").textContent = "DDMythical · rate 1.0";
+                document.getElementById("m-mapinfo").innerHTML =
+                    `<div class="map-info-box"><div class="mi-name">Delta Dan</div><div class="mi-sub"><div class="mi-artist">DDMythical</div><div class="mi-rate">rate: <span>1.0x</span></div></div></div>`;
+
+                currentRank = normalizeStatus(p.status);
+                updateRankBtns();
+                document.getElementById("overlay").classList.add("open");
+            }
+
+            function closeModal() {
+                document.getElementById("overlay").classList.remove("open");
+                current = null;
+                isFinalBoss = false;
+            }
+
+            function pickRank(r) {
+                currentRank = normalizeStatus(r);
+                updateRankBtns();
+            }
+
+            function updateRankBtns() {
+                ["none"].concat(STATUS_ORDER).forEach((r) => {
+                    const el = document.getElementById("rk-" + r);
+                    if (!el) return;
+                    el.className = "rk-btn" + (currentRank === r ? " sel-" + r : "");
+                });
+            }
+
+            function saveModal() {
+                if (isFinalBoss) {
+                    if (currentRank === "none") delete progress["__final_boss__"];
+                    else progress["__final_boss__"] = { status: currentRank };
+                    saveProgress();
+                    render();
+                    closeModal();
+                    return;
+                }
+                if (!current) return;
+                const k = key(current.cat.name, current.row);
+                if (currentRank === "none") delete progress[k];
+                else progress[k] = { status: currentRank };
+                saveProgress();
+                render();
+                closeModal();
+            }
+
+            document.getElementById("overlay").addEventListener("click", (e) => {
+                if (e.target === document.getElementById("overlay")) closeModal();
+            });
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") closeModal();
+            });
+
+            // Przenieś render() nad warunek, żeby najpierw zbudować siatkę, a potem zmienić tekst statusu
+
+            render();
+        </script>
+    </body>
+</html>

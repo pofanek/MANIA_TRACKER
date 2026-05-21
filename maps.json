@@ -1,0 +1,72 @@
+{
+  "jumpstream": [
+    { "id": 1, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 2, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 3, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 4, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 5, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 6, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 7, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 8, "name": "", "artist": "", "rate": 1.0 }
+  ],
+  "handstream": [
+    { "id": 9,  "name": "", "artist": "", "rate": 1.0 },
+    { "id": 10, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 11, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 12, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 13, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 14, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 15, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 16, "name": "", "artist": "", "rate": 1.0 }
+  ],
+  "speed": [
+    { "id": 17, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 18, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 19, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 20, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 21, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 22, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 23, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 24, "name": "", "artist": "", "rate": 1.0 }
+  ],
+  "chord jack": [
+    { "id": 25, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 26, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 27, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 28, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 29, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 30, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 31, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 32, "name": "", "artist": "", "rate": 1.0 }
+  ],
+  "dense chord jack": [
+    { "id": 33, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 34, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 35, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 36, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 37, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 38, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 39, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 40, "name": "", "artist": "", "rate": 1.0 }
+  ],
+  "speed jack": [
+    { "id": 41, "name": "Freedom Dive", "artist": "xi", "rate": 1.0 },
+    { "id": 42, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 43, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 44, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 45, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 46, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 47, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 48, "name": "", "artist": "", "rate": 1.0 }
+  ],
+  "tech": [
+    { "id": 49, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 50, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 51, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 52, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 53, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 54, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 55, "name": "", "artist": "", "rate": 1.0 },
+    { "id": 56, "name": "", "artist": "", "rate": 1.0 }
+  ]
+}
