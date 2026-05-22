@@ -44,6 +44,12 @@
                 --c-clear-text: #a87ef0;
                 --c-clear-badge: #2a1a50;
 
+                /* Final boss default = abyssal / toxic dark cyan */
+                --c-fb-bg: #061a1a;
+                --c-fb-border: #0d6e6e;
+                --c-fb-text: #00d4cc;
+                --c-fb-glow: rgba(0, 180, 170, 0.12);
+
                 --radius: 6px;
                 --font-mono: "Space Mono", monospace;
                 --font-ui: "DM Sans", sans-serif;
@@ -142,6 +148,41 @@
                 transition: width 0.4s ease;
             }
 
+            /* DAN SELECTOR */
+            .dan-selector-wrap {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            .dan-selector-label {
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--muted);
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                white-space: nowrap;
+            }
+            .dan-select {
+                background: var(--bg3);
+                border: 0.5px solid var(--c-fb-border);
+                border-radius: var(--radius);
+                color: var(--c-fb-text);
+                font-family: var(--font-mono);
+                font-size: 11px;
+                padding: 5px 10px;
+                cursor: pointer;
+                outline: none;
+                transition: border-color 0.15s;
+            }
+            .dan-select:hover,
+            .dan-select:focus {
+                border-color: rgba(0, 212, 204, 0.6);
+            }
+            .dan-select option {
+                background: var(--bg2);
+                color: var(--text);
+            }
+
             /* ROAD TO DELTA banner */
             .road-banner {
                 display: flex;
@@ -159,7 +200,7 @@
                 text-transform: uppercase;
             }
             .road-text span {
-                color: var(--c-clear-text);
+                color: var(--c-fb-text);
             }
 
             /* MAIN */
@@ -176,6 +217,7 @@
                 gap: 10px;
                 margin-bottom: 1.25rem;
                 flex-wrap: wrap;
+                transform: translateX(107px);
             }
             .load-bar label.lbl {
                 font-family: var(--font-mono);
@@ -225,6 +267,7 @@
                 gap: 6px;
                 margin-bottom: 1.25rem;
                 flex-wrap: wrap;
+                transform: translateX(107px);
             }
             .leg {
                 display: flex;
@@ -264,10 +307,93 @@
                 border: 0.5px solid var(--c-clear-border);
             }
 
-            /* GRID */
+            /* GRID + SIDEBAR LAYOUT */
+            .grid-and-sidebar {
+                display: flex;
+                gap: 14px;
+                align-items: flex-start;
+                /* Przesuń całość w prawo o połowę szerokości sidebara (200px + 14px gap = 214px),
+                   dzięki czemu środek grida pokrywa się ze środkiem ekranu */
+                transform: translateX(107px);
+            }
             .grid-wrap {
+                flex: 1;
+                min-width: 0;
                 overflow-x: auto;
                 padding-bottom: 1rem;
+            }
+
+            /* TEMPLATE SIDEBAR */
+            .template-sidebar {
+                flex-shrink: 0;
+                width: 200px;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                padding-top: 2px;
+            }
+            .template-sidebar-label {
+                font-family: var(--font-mono);
+                font-size: 9px;
+                color: var(--muted2);
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                margin-bottom: 2px;
+            }
+            .tpl-btn {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 9px 12px;
+                background: var(--bg3);
+                border: 0.5px solid var(--border2);
+                border-radius: var(--radius);
+                color: var(--muted);
+                font-family: var(--font-mono);
+                font-size: 11px;
+                cursor: pointer;
+                text-align: left;
+                transition:
+                    border-color 0.15s,
+                    color 0.15s;
+                width: 100%;
+            }
+            .tpl-btn:hover:not(:disabled) {
+                border-color: rgba(255, 255, 255, 0.25);
+                color: var(--text);
+            }
+            .tpl-btn.active {
+                border-color: var(--c-fb-border);
+                color: var(--c-fb-text);
+                background: var(--c-fb-bg);
+            }
+            .tpl-btn:disabled {
+                opacity: 0.38;
+                cursor: default;
+            }
+            .tpl-btn-letter {
+                font-size: 15px;
+                line-height: 1;
+                width: 18px;
+                text-align: center;
+                flex-shrink: 0;
+            }
+            .tpl-btn-text {
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
+            }
+            .tpl-btn-name {
+                font-weight: 700;
+                letter-spacing: 0.03em;
+            }
+            .tpl-btn-sub {
+                font-size: 9px;
+                color: var(--muted2);
+                letter-spacing: 0.04em;
+            }
+            .tpl-btn.active .tpl-btn-sub {
+                color: var(--c-fb-border);
             }
 
             .cat-headers {
@@ -626,6 +752,7 @@
             }
             .mi-sub {
                 display: flex;
+                align-items: baseline;
                 gap: 12px;
                 margin-top: 4px;
             }
@@ -646,6 +773,100 @@
                 color: var(--muted2);
                 font-family: var(--font-mono);
                 font-style: italic;
+            }
+
+            /* EDIT MODE */
+            .mi-edit-btn {
+                background: none;
+                border: none;
+                color: var(--muted2);
+                cursor: pointer;
+                padding: 0 4px;
+                font-size: 13px;
+                line-height: 1;
+                transition: color 0.12s;
+                flex-shrink: 0;
+            }
+            .mi-edit-btn:hover {
+                color: var(--text);
+            }
+
+            .map-info-header {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 4px;
+            }
+
+            .edit-fields {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                margin-top: 6px;
+            }
+            .edit-field-row {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }
+            .edit-field-lbl {
+                font-size: 9px;
+                color: var(--muted2);
+                font-family: var(--font-mono);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+            }
+            .edit-input {
+                background: var(--bg);
+                border: 0.5px solid var(--border2);
+                border-radius: 4px;
+                padding: 5px 8px;
+                color: var(--text);
+                font-family: var(--font-ui);
+                font-size: 13px;
+                width: 100%;
+                outline: none;
+                transition: border-color 0.12s;
+            }
+            .edit-input:focus {
+                border-color: rgba(255, 255, 255, 0.3);
+            }
+            .edit-input[type="number"] {
+                font-family: var(--font-mono);
+                width: 90px;
+            }
+            .edit-actions {
+                display: flex;
+                gap: 5px;
+                margin-top: 4px;
+            }
+            .edit-save-btn {
+                padding: 4px 12px;
+                background: var(--text);
+                color: var(--bg);
+                border: none;
+                border-radius: 4px;
+                font-family: var(--font-mono);
+                font-size: 10px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: opacity 0.1s;
+            }
+            .edit-save-btn:hover {
+                opacity: 0.8;
+            }
+            .edit-cancel-btn {
+                padding: 4px 10px;
+                background: transparent;
+                color: var(--muted);
+                border: 0.5px solid var(--border2);
+                border-radius: 4px;
+                font-family: var(--font-mono);
+                font-size: 10px;
+                cursor: pointer;
+            }
+            .edit-cancel-btn:hover {
+                color: var(--text);
             }
 
             .rank-grid {
@@ -742,6 +963,18 @@
                 <div class="nav-title">skill <span>tracker</span></div>
             </div>
             <div class="nav-right" id="stats-row"></div>
+            <div class="dan-selector-wrap" style="flex-shrink: 0; margin-left: 4px">
+                <span class="dan-selector-label">dan</span>
+                <select class="dan-select" id="dan-select" onchange="changeDan(this.value)">
+                    <option value="alpha">alpha (α)</option>
+                    <option value="beta">beta (β)</option>
+                    <option value="gamma">gamma (γ)</option>
+                    <option value="delta" selected>delta (δ)</option>
+                    <option value="epsilon">epsilon (ε)</option>
+                    <option value="zeta">zeta (ζ)</option>
+                    <option value="eta">eta (η)</option>
+                </select>
+            </div>
         </nav>
 
         <div class="progress-wrap">
@@ -750,26 +983,28 @@
 
         <div class="page">
             <div class="road-banner">
-                <span class="road-text">road to <span>DELTA</span></span>
+                <span class="road-text">road to <span id="road-dan-name">DELTA</span></span>
             </div>
 
             <div class="load-bar">
                 <label class="lbl">maps</label>
-                <label class="file-btn" for="file-input">&#8599; wczytaj maps.json</label>
+                <label class="file-btn" for="file-input">&#8599; import maps template</label>
                 <input type="file" id="file-input" accept=".json" style="display: none" />
+                <button class="file-btn" onclick="exportMaps()">&#8595; export maps template</button>
+
                 <span class="load-status" id="load-status"></span>
                 <div class="load-sep"></div>
-                <label class="lbl">progres</label>
-                <button class="file-btn" onclick="exportProgress()">&#8595; eksportuj progres</button>
-                <label class="file-btn" for="import-input">&#8593; importuj progres</label>
+                <label class="lbl">progress</label>
+                <label class="file-btn" for="import-input">&#8593; import progress</label>
                 <input type="file" id="import-input" accept=".json" style="display: none" />
+                <button class="file-btn" onclick="exportProgress()">&#8595; export progress</button>
                 <span class="load-status" id="import-status"></span>
             </div>
 
             <div class="legend">
                 <div class="leg">
                     <div class="leg-sq leg-none-sq"></div>
-                    brak
+                    none
                 </div>
                 <div class="leg">
                     <div class="leg-sq leg-sub94-sq"></div>
@@ -789,17 +1024,86 @@
                 </div>
             </div>
 
-            <div class="grid-wrap">
-                <div class="cat-headers" id="cat-headers"></div>
-                <div class="grid" id="grid"></div>
+            <div class="grid-and-sidebar">
+                <div class="grid-wrap">
+                    <div class="cat-headers" id="cat-headers"></div>
+                    <div class="grid" id="grid"></div>
+                </div>
+                <div class="template-sidebar" id="template-sidebar">
+                    <div class="template-sidebar-label">&#8595; templates</div>
+                    <button
+                        class="tpl-btn active"
+                        id="tpl-btn-alpha"
+                        onclick="downloadDanTemplate('alpha')"
+                        disabled
+                    >
+                        <span class="tpl-btn-letter">α</span>
+                        <span class="tpl-btn-text"
+                            ><span class="tpl-btn-name">Alpha Dan</span
+                            ><span class="tpl-btn-sub">coming soon</span></span
+                        >
+                    </button>
+                    <button class="tpl-btn" id="tpl-btn-beta" onclick="downloadDanTemplate('beta')" disabled>
+                        <span class="tpl-btn-letter">β</span>
+                        <span class="tpl-btn-text"
+                            ><span class="tpl-btn-name">Beta Dan</span
+                            ><span class="tpl-btn-sub">coming soon</span></span
+                        >
+                    </button>
+                    <button
+                        class="tpl-btn"
+                        id="tpl-btn-gamma"
+                        onclick="downloadDanTemplate('gamma')"
+                        disabled
+                    >
+                        <span class="tpl-btn-letter">γ</span>
+                        <span class="tpl-btn-text"
+                            ><span class="tpl-btn-name">Gamma Dan</span
+                            ><span class="tpl-btn-sub">coming soon</span></span
+                        >
+                    </button>
+                    <button class="tpl-btn" id="tpl-btn-delta" onclick="downloadDanTemplate('delta')">
+                        <span class="tpl-btn-letter">δ</span>
+                        <span class="tpl-btn-text"
+                            ><span class="tpl-btn-name">Delta Dan</span
+                            ><span class="tpl-btn-sub">download template</span></span
+                        >
+                    </button>
+                    <button
+                        class="tpl-btn"
+                        id="tpl-btn-epsilon"
+                        onclick="downloadDanTemplate('epsilon')"
+                        disabled
+                    >
+                        <span class="tpl-btn-letter">ε</span>
+                        <span class="tpl-btn-text"
+                            ><span class="tpl-btn-name">Epsilon Dan</span
+                            ><span class="tpl-btn-sub">coming soon</span></span
+                        >
+                    </button>
+                    <button class="tpl-btn" id="tpl-btn-zeta" onclick="downloadDanTemplate('zeta')" disabled>
+                        <span class="tpl-btn-letter">ζ</span>
+                        <span class="tpl-btn-text"
+                            ><span class="tpl-btn-name">Zeta Dan</span
+                            ><span class="tpl-btn-sub">coming soon</span></span
+                        >
+                    </button>
+                    <button class="tpl-btn" id="tpl-btn-eta" onclick="downloadDanTemplate('eta')" disabled>
+                        <span class="tpl-btn-letter">η</span>
+                        <span class="tpl-btn-text"
+                            ><span class="tpl-btn-name">Eta Dan</span
+                            ><span class="tpl-btn-sub">coming soon</span></span
+                        >
+                    </button>
+                </div>
             </div>
 
             <div class="final-boss-wrap">
                 <div class="final-boss-label">&#9670; final boss</div>
                 <div class="final-boss" id="final-boss-cell" onclick="openFinalBoss()">
-                    <div class="fb-delta">Δ</div>
-                    <div class="fb-name">Delta Dan</div>
-                    <div class="fb-meta">DDMythical &nbsp;·&nbsp; rate 1.0</div>
+                    <div class="fb-delta" id="fb-greek-letter">δ</div>
+                    <div class="fb-name" id="fb-dan-title">Delta Dan</div>
+                    <div class="fb-meta" id="fb-dan-meta">DDMythical &nbsp;·&nbsp; rate 1.0</div>
                     <div class="fb-badge" id="fb-badge-el" style="display: none"></div>
                 </div>
             </div>
@@ -809,29 +1113,89 @@
             <div class="modal">
                 <div class="modal-header">
                     <div>
-                        <h3 id="m-title">Mapa #1</h3>
+                        <h3 id="m-title">Map #1</h3>
                         <p id="m-sub">speed jack</p>
                     </div>
                     <button class="close-x" onclick="closeModal()">×</button>
                 </div>
-                <div class="field-label">mapa</div>
+                <div class="field-label">map</div>
                 <div id="m-mapinfo"></div>
                 <div class="field-label">status</div>
                 <div class="rank-grid">
-                    <button class="rk-btn" id="rk-none" onclick="pickRank('none')">brak</button>
+                    <button class="rk-btn" id="rk-none" onclick="pickRank('none')">none</button>
                     <button class="rk-btn" id="rk-sub94" onclick="pickRank('sub94')">&lt;94%</button>
                     <button class="rk-btn" id="rk-94" onclick="pickRank('94')">94%</button>
                     <button class="rk-btn" id="rk-s" onclick="pickRank('s')">S rank</button>
                     <button class="rk-btn" id="rk-clear" onclick="pickRank('clear')">Clear</button>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-save" onclick="saveModal()">zapisz</button>
-                    <button class="btn-cancel" onclick="closeModal()">anuluj</button>
+                    <button class="btn-save" onclick="saveModal()">save</button>
+                    <button class="btn-cancel" onclick="closeModal()">cancel</button>
                 </div>
             </div>
         </div>
 
         <script>
+            // DAN CONFIGURATION
+            const DAN_DATA = {
+                alpha: { name: "Alpha", letter: "α", title: "Alpha Dan" },
+                beta: { name: "Beta", letter: "β", title: "Beta Dan" },
+                gamma: { name: "Gamma", letter: "γ", title: "Gamma Dan" },
+                delta: { name: "Delta", letter: "δ", title: "Delta Dan" },
+                epsilon: { name: "Epsilon", letter: "ε", title: "Epsilon Dan" },
+                zeta: { name: "Zeta", letter: "ζ", title: "Zeta Dan" },
+                eta: { name: "Eta", letter: "η", title: "Eta Dan" },
+            };
+
+            const DAN_STORAGE_KEY = "rhythia_dan";
+
+            function getCurrentDan() {
+                try {
+                    const saved = localStorage.getItem(DAN_STORAGE_KEY);
+                    if (saved && DAN_DATA[saved]) return saved;
+                } catch (e) {}
+                return "delta";
+            }
+
+            function changeDan(danKey) {
+                if (!DAN_DATA[danKey]) return;
+                try {
+                    localStorage.setItem(DAN_STORAGE_KEY, danKey);
+                } catch (e) {}
+                applyDan(danKey);
+            }
+
+            function applyDan(danKey) {
+                const dan = DAN_DATA[danKey] || DAN_DATA.delta;
+                // Road to banner
+                const roadSpan = document.getElementById("road-dan-name");
+                if (roadSpan) roadSpan.textContent = dan.name.toUpperCase();
+                // Final boss cell
+                const letterEl = document.getElementById("fb-greek-letter");
+                if (letterEl) letterEl.textContent = dan.letter;
+                const titleEl = document.getElementById("fb-dan-title");
+                if (titleEl) titleEl.textContent = dan.title;
+                // Meta stays DDMythical always
+                // Highlight active sidebar button
+                Object.keys(DAN_DATA).forEach((k) => {
+                    const btn = document.getElementById("tpl-btn-" + k);
+                    if (!btn) return;
+                    if (k === danKey) {
+                        btn.classList.add("active");
+                    } else {
+                        btn.classList.remove("active");
+                    }
+                });
+            }
+
+            // Init dan on load
+            (function initDan() {
+                const saved = getCurrentDan();
+                const select = document.getElementById("dan-select");
+                if (select) select.value = saved;
+                applyDan(saved);
+            })();
+
             const CATS = [
                 { name: "jumpstream", short: "Jumpstream" },
                 { name: "handstream", short: "Handstream" },
@@ -951,6 +1315,49 @@
                 URL.revokeObjectURL(url);
             }
 
+            function exportMaps() {
+                if (!mapData || Object.keys(mapData).length === 0) {
+                    setStatusLine("load-status", "✗ no map data to export", true);
+                    return;
+                }
+                const data = JSON.stringify(mapData, null, 2);
+                const blob = new Blob([data], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "maps.json";
+                a.click();
+                URL.revokeObjectURL(url);
+                setStatusLine("load-status", "✓ exported maps template");
+            }
+
+            async function downloadDanTemplate(danKey) {
+                if (danKey !== "delta") return; // others coming soon
+                downloadTemplate();
+            }
+
+            async function downloadTemplate() {
+                const url =
+                    "https://raw.githubusercontent.com/pofanek/Osu-Mania-Skill-Tracker/main/maps.json";
+                setStatusLine("load-status", "⟳ fetching...");
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) throw new Error("HTTP " + res.status);
+                    const text = await res.text();
+                    // Only download the file — user imports it manually
+                    const blob = new Blob([text], { type: "application/json" });
+                    const burl = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = burl;
+                    a.download = "maps.json";
+                    a.click();
+                    URL.revokeObjectURL(burl);
+                    setStatusLine("load-status", "✓ template downloaded");
+                } catch (err) {
+                    setStatusLine("load-status", "✗ fetch error: " + err.message, true);
+                }
+            }
+
             document.getElementById("import-input").addEventListener("change", function (e) {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -963,9 +1370,9 @@
                         progress = normalizeProgressData(imported);
                         saveProgress();
                         render();
-                        setStatusLine("import-status", "✓ wczytano progres");
+                        setStatusLine("import-status", "✓ progress loaded");
                     } catch (err) {
-                        setStatusLine("import-status", "✗ błąd importu", true);
+                        setStatusLine("import-status", "✗ import error", true);
                     }
                 };
                 reader.readAsText(file);
@@ -981,10 +1388,10 @@
                         mapData = JSON.parse(ev.target.result);
                         // POPRAWKA: Zapisujemy mapData do localStorage pod kluczem "rhythia_maps"
                         localStorage.setItem("rhythia_maps", ev.target.result);
-                        setStatusLine("load-status", "✓ wczytano " + file.name);
+                        setStatusLine("load-status", "✓ loaded " + file.name);
                         render();
                     } catch (err) {
-                        setStatusLine("load-status", "✗ błąd parsowania JSON", true);
+                        setStatusLine("load-status", "✗ JSON parse error", true);
                     }
                 };
                 reader.readAsText(file);
@@ -1062,6 +1469,7 @@
 
                 updateStats();
                 renderFinalBoss();
+                applyDan(getCurrentDan());
             }
 
             function updateStats() {
@@ -1162,11 +1570,11 @@
                     badge.style.color = "var(--c-clear-text)";
                     badge.textContent = "CLR";
                 } else {
-                    cell.style.borderColor = "#22335f";
-                    cell.style.background = "#0b1329";
-                    delta.style.color = "#7e9ddf";
-                    name.style.color = "#7e9ddf";
-                    meta.style.color = "#49618f";
+                    cell.style.borderColor = "var(--c-fb-border)";
+                    cell.style.background = "var(--c-fb-bg)";
+                    delta.style.color = "var(--c-fb-text)";
+                    name.style.color = "var(--c-fb-text)";
+                    meta.style.color = "var(--c-fb-border)";
                     badge.style.display = "none";
                 }
             }
@@ -1176,25 +1584,108 @@
             let currentRank = "none";
             let isFinalBoss = false;
 
-            function openModal(cat, row, idx) {
-                isFinalBoss = false;
-                current = { cat, row };
-                const p = progress[key(cat.name, row)] || {};
-                const entry = getEntry(cat.name, row);
-
-                document.getElementById("m-title").textContent = "Mapa #" + idx;
-                document.getElementById("m-sub").textContent = cat.name;
-
+            function renderMapInfo(entry, catName, row) {
                 const infoBox = document.getElementById("m-mapinfo");
                 if (entry && entry.name) {
                     const rateHtml =
                         entry.rate != null
                             ? `<div class="mi-rate">rate: <span>${entry.rate}x</span></div>`
                             : "";
-                    infoBox.innerHTML = `<div class="map-info-box"><div class="mi-name">${entry.name}</div><div class="mi-sub"><div class="mi-artist">${entry.artist || ""}</div>${rateHtml}</div></div>`;
+                    infoBox.innerHTML = `
+                        <div class="map-info-box">
+                            <div class="map-info-header">
+                                <div class="mi-name">${entry.name}</div>
+                                <button class="mi-edit-btn" title="Edit" onclick="startEdit('${catName}',${row})">✏️</button>
+                            </div>
+                            <div class="mi-sub">
+                                <div class="mi-artist">${entry.artist || ""}</div>
+                                ${rateHtml}
+                            </div>
+                        </div>`;
                 } else {
-                    infoBox.innerHTML = `<div class="map-info-empty">brak danych — wczytaj maps.json</div>`;
+                    infoBox.innerHTML = `
+                        <div class="map-info-box">
+                            <div class="map-info-header">
+                                <div class="map-info-empty">no data — import maps template</div>
+                                <button class="mi-edit-btn" title="Edit" onclick="startEdit('${catName}',${row})">✏️</button>
+                            </div>
+                        </div>`;
                 }
+            }
+
+            function buildEditForm(entry, catName, row, autofocus) {
+                return `
+                    <div class="map-info-box">
+                        <div class="edit-fields">
+                            <div class="edit-field-row">
+                                <div class="edit-field-lbl">name</div>
+                                <input class="edit-input" id="edit-name" type="text" value="${(entry.name || "").replace(/"/g, "&quot;")}" placeholder="map name" ${autofocus ? "autofocus" : ""}>
+                            </div>
+                            <div class="edit-field-row">
+                                <div class="edit-field-lbl">artist</div>
+                                <input class="edit-input" id="edit-artist" type="text" value="${(entry.artist || "").replace(/"/g, "&quot;")}" placeholder="artist">
+                            </div>
+                            <div class="edit-field-row">
+                                <div class="edit-field-lbl">rate</div>
+                                <input class="edit-input" id="edit-rate" type="number" value="${entry.rate != null ? entry.rate : 1.0}" step="0.05" min="0.5" max="2.0">
+                            </div>
+                        </div>
+                        <div class="edit-actions">
+                            <button class="edit-save-btn" id="edit-save-btn">save</button>
+                            <button class="edit-cancel-btn" id="edit-cancel-btn">cancel</button>
+                        </div>
+                    </div>`;
+            }
+
+            function attachEditFormHandlers(infoBox, entry, catName, row) {
+                infoBox.querySelector("#edit-save-btn").addEventListener("click", () => {
+                    const name = infoBox.querySelector("#edit-name").value.trim();
+                    const artist = infoBox.querySelector("#edit-artist").value.trim();
+                    const rate = parseFloat(infoBox.querySelector("#edit-rate").value) || 1.0;
+                    // Update mapData
+                    if (!mapData[catName]) mapData[catName] = [];
+                    if (!mapData[catName][row]) mapData[catName][row] = { id: row + 1 };
+                    mapData[catName][row].name = name;
+                    mapData[catName][row].artist = artist;
+                    mapData[catName][row].rate = rate;
+                    localStorage.setItem("rhythia_maps", JSON.stringify(mapData));
+                    render();
+                    renderMapInfo(
+                        mapData[catName] && mapData[catName][row] ? mapData[catName][row] : null,
+                        catName,
+                        row,
+                    );
+                });
+                infoBox.querySelector("#edit-cancel-btn").addEventListener("click", () => {
+                    renderMapInfo(
+                        mapData[catName] && mapData[catName][row] ? mapData[catName][row] : null,
+                        catName,
+                        row,
+                    );
+                });
+            }
+
+            function startEdit(catName, row) {
+                const entry =
+                    mapData[catName] && mapData[catName][row]
+                        ? mapData[catName][row]
+                        : { name: "", artist: "", rate: 1.0 };
+                const infoBox = document.getElementById("m-mapinfo");
+                infoBox.innerHTML = buildEditForm(entry, catName, row, true);
+                attachEditFormHandlers(infoBox, entry, catName, row);
+                infoBox.querySelector("#edit-name").focus();
+            }
+
+            function openModal(cat, row, idx) {
+                isFinalBoss = false;
+                current = { cat, row };
+                const p = progress[key(cat.name, row)] || {};
+                const entry = getEntry(cat.name, row);
+
+                document.getElementById("m-title").textContent = "Map #" + idx;
+                document.getElementById("m-sub").textContent = cat.name;
+
+                renderMapInfo(entry, cat.name, row);
 
                 currentRank = normalizeStatus(p.status);
                 updateRankBtns();
@@ -1205,11 +1696,12 @@
                 isFinalBoss = true;
                 current = null;
                 const p = progress["__final_boss__"] || {};
+                const dan = DAN_DATA[getCurrentDan()] || DAN_DATA.delta;
 
-                document.getElementById("m-title").textContent = "Delta Dan";
+                document.getElementById("m-title").textContent = dan.title;
                 document.getElementById("m-sub").textContent = "DDMythical · rate 1.0";
                 document.getElementById("m-mapinfo").innerHTML =
-                    `<div class="map-info-box"><div class="mi-name">Delta Dan</div><div class="mi-sub"><div class="mi-artist">DDMythical</div><div class="mi-rate">rate: <span>1.0x</span></div></div></div>`;
+                    `<div class="map-info-box"><div class="mi-name">${dan.title}</div><div class="mi-sub"><div class="mi-artist">DDMythical</div><div class="mi-rate">rate: <span>1.0x</span></div></div></div>`;
 
                 currentRank = normalizeStatus(p.status);
                 updateRankBtns();
