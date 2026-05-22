@@ -9,3 +9,7 @@
 2. For map progress (94% / S rank etc.) you can either:
 - change progress manually by clicking squares.
 - import / export your map progress *note: (progress saves when refreshing the website, but **can be lost on clearing cookies**)*
+
+3. Additional notes:
+- on up right you can change your dan
+- there are pre-made templates on the right side of the grid which you can download and import.
