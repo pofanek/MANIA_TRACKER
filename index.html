@@ -534,11 +534,24 @@
 
             .cell-rate {
                 position: absolute;
-                bottom: 3px;
-                left: 5px;
+                bottom: 4px;
+                left: 7px;
                 font-family: var(--font-mono);
-                font-size: 8px;
-                color: var(--muted2);
+                font-size: 10px;
+                color: var(--muted);
+            }
+            .cell-dan {
+                position: absolute;
+                bottom: 18px;
+                left: 7px;
+                font-family: var(--font-mono);
+                font-size: 9px;
+                color: var(--c-fb-text);
+                opacity: 0.85;
+                white-space: nowrap;
+                overflow: hidden;
+                max-width: 80%;
+                text-overflow: ellipsis;
             }
             .cell.is-sub94 .cell-rate {
                 color: var(--c-sub94-text);
@@ -767,6 +780,12 @@
             }
             .mi-rate span {
                 color: var(--c-s-text);
+            }
+            .mi-dan {
+                font-size: 11px;
+                color: var(--c-fb-text);
+                font-family: var(--font-mono);
+                opacity: 0.8;
             }
             .map-info-empty {
                 font-size: 12px;
@@ -1448,6 +1467,13 @@
                             cell.appendChild(info);
                         }
 
+                        if (entry && entry.dan) {
+                            const dn = document.createElement("div");
+                            dn.className = "cell-dan";
+                            dn.textContent = entry.dan;
+                            cell.appendChild(dn);
+                        }
+
                         if (entry && entry.rate != null) {
                             const rt = document.createElement("div");
                             rt.className = "cell-rate";
@@ -1591,6 +1617,9 @@
                         entry.rate != null
                             ? `<div class="mi-rate">rate: <span>${entry.rate}x</span></div>`
                             : "";
+                    const danHtml = entry.dan
+                        ? `<div class="mi-dan">${entry.dan}</div>`
+                        : "";
                     infoBox.innerHTML = `
                         <div class="map-info-box">
                             <div class="map-info-header">
@@ -1600,6 +1629,7 @@
                             <div class="mi-sub">
                                 <div class="mi-artist">${entry.artist || ""}</div>
                                 ${rateHtml}
+                                ${danHtml}
                             </div>
                         </div>`;
                 } else {
@@ -1629,6 +1659,10 @@
                                 <div class="edit-field-lbl">rate</div>
                                 <input class="edit-input" id="edit-rate" type="number" value="${entry.rate != null ? entry.rate : 1.0}" step="0.05" min="0.5" max="2.0">
                             </div>
+                            <div class="edit-field-row">
+                                <div class="edit-field-lbl">dan</div>
+                                <input class="edit-input" id="edit-dan" type="text" value="${(entry.dan || "").replace(/"/g, "&quot;")}" placeholder="e.g. delta low">
+                            </div>
                         </div>
                         <div class="edit-actions">
                             <button class="edit-save-btn" id="edit-save-btn">save</button>
@@ -1642,12 +1676,14 @@
                     const name = infoBox.querySelector("#edit-name").value.trim();
                     const artist = infoBox.querySelector("#edit-artist").value.trim();
                     const rate = parseFloat(infoBox.querySelector("#edit-rate").value) || 1.0;
+                    const dan = infoBox.querySelector("#edit-dan").value.trim();
                     // Update mapData
                     if (!mapData[catName]) mapData[catName] = [];
                     if (!mapData[catName][row]) mapData[catName][row] = { id: row + 1 };
                     mapData[catName][row].name = name;
                     mapData[catName][row].artist = artist;
                     mapData[catName][row].rate = rate;
+                    mapData[catName][row].dan = dan;
                     localStorage.setItem("rhythia_maps", JSON.stringify(mapData));
                     render();
                     renderMapInfo(
@@ -1669,7 +1705,7 @@
                 const entry =
                     mapData[catName] && mapData[catName][row]
                         ? mapData[catName][row]
-                        : { name: "", artist: "", rate: 1.0 };
+                        : { name: "", artist: "", rate: 1.0, dan: "" };
                 const infoBox = document.getElementById("m-mapinfo");
                 infoBox.innerHTML = buildEditForm(entry, catName, row, true);
                 attachEditFormHandlers(infoBox, entry, catName, row);
