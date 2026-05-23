@@ -1,5 +1,7 @@
 # osu!mania skill tracker
 
+**View the website here: https://pofanek.github.io/Osu-Mania-Skill-Tracker/**
+
 ## Usage
 
 1. For adding maps you can either:
@@ -11,5 +13,5 @@
 - import / export your map progress *note: (progress saves when refreshing the website, but **can be lost on clearing cookies**)*
 
 3. Additional notes:
-- on up right you can change your dan
+- on top right you can change your dan
 - there are pre-made templates on the right side of the grid which you can download and import.
